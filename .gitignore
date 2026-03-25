@@ -1,0 +1,16 @@
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# Binaries
+*.exe
+/bin/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
