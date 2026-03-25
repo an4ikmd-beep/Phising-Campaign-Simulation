@@ -40,7 +40,7 @@ func (t *Tracker) handleOpen(w http.ResponseWriter, r *http.Request) {
 
 	target, err := t.DB.GetTargetByToken(r.Context(), token)
 	if err != nil {
-		//still return pizel if token unknown
+		//still return pixel if token unknown
 		w.Header().Set("Content-Type", "image/gif")
 		w.Write(pixel)
 		return
