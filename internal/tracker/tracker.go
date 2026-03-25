@@ -21,7 +21,7 @@ func (t *Tracker) Routes() http.Handler {
 	r.Get("/open/{token}.png", t.handleOpen)
 	r.Get("/click/{token}", t.handleClick)
 	r.Get("/page/{token}", t.handlePage)
-	r.Get("/submit/{token}", t.handleSubmit)
+	r.Post("/submit/{token}", t.handleSubmit)
 	return r
 }
 
