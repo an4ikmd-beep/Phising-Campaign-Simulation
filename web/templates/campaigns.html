@@ -1,0 +1,88 @@
+{{define "campaigns"}}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>PhishSim — Campaigns</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Segoe UI, sans-serif; background: #f5f6fa; color: #2d3436; }
+  nav { background: #2d3436; padding: 0 32px; display: flex; align-items: center; gap: 24px; height: 52px; }
+  nav a { color: #dfe6e9; text-decoration: none; font-size: 14px; }
+  nav a:hover { color: white; }
+  nav .brand { color: white; font-weight: 700; font-size: 16px; margin-right: 16px; }
+  .page { padding: 32px; max-width: 1100px; margin: auto; }
+  h1 { font-size: 22px; margin-bottom: 24px; }
+  .btn { display: inline-block; padding: 8px 18px; border-radius: 5px; font-size: 13px;
+         text-decoration: none; cursor: pointer; border: none; font-family: inherit; }
+  .btn-primary { background: #0067b8; color: white; }
+  .btn-primary:hover { background: #005a9e; }
+  .btn-danger  { background: #c0392b; color: white; }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+  table { width: 100%; border-collapse: collapse; background: white;
+          border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  th { background: #2d3436; color: white; padding: 10px 14px; text-align: left; font-size: 13px; }
+  td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #f0f0f0; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafa; }
+  .badge { display:inline-block; padding: 2px 8px; border-radius: 4px;
+           font-size: 11px; font-weight: 600; color: white; }
+  .badge-draft    { background: #636e72; }
+  .badge-active   { background: #0067b8; }
+  .badge-completed{ background: #27ae60; }
+  .card { background: white; border-radius: 8px; padding: 20px 28px;
+          box-shadow: 0 1px 4px rgba(0,0,0,.08); margin-bottom: 24px; }
+</style>
+</head>
+<body>
+<nav>
+  <span class="brand">🎣 PhishSim</span>
+  <a href="/admin/">Campaigns</a>
+  <a href="/admin/new">New Campaign</a>
+</nav>
+<div class="page">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+  <h1>Campaigns</h1>
+  <a href="/admin/" class="btn btn-primary">+ New Campaign</a>
+</div>
+
+{{if .Campaigns}}
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Subject</th>
+      <th>Status</th>
+      <th>Created</th>
+      <th>Sent</th>
+      <th>Clicked</th>
+      <th>Submitted</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{range .Campaigns}}
+    <tr>
+      <td><strong>{{.Campaign.Name}}</strong></td>
+      <td>{{.Campaign.Subject}}</td>
+      <td><span class="badge badge-{{.Campaign.Status}}">{{.Campaign.Status}}</span></td>
+      <td>{{formatTime .Campaign.CreatedAt}}</td>
+      <td>{{.Counts.EmailSent}}</td>
+      <td>{{.Counts.Clicked}}</td>
+      <td>{{.Counts.Submitted}}</td>
+      <td>
+        <a href="/admin/campaign/{{.Campaign.ID}}" class="btn btn-primary btn-sm">View</a>
+      </td>
+    </tr>
+    {{end}}
+  </tbody>
+</table>
+{{else}}
+<div class="card" style="text-align:center;color:#636e72;padding:48px;">
+  No campaigns yet. <a href="/admin/new">Create one →</a>
+</div>
+{{end}}
+</div>
+</body>
+</html>
+{{end}}

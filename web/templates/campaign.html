@@ -1,0 +1,118 @@
+{{define "campaign"}}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>PhishSim — Campaign</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Segoe UI, sans-serif; background: #f5f6fa; color: #2d3436; }
+  nav { background: #2d3436; padding: 0 32px; display: flex; align-items: center; gap: 24px; height: 52px; }
+  nav a { color: #dfe6e9; text-decoration: none; font-size: 14px; }
+  nav a:hover { color: white; }
+  nav .brand { color: white; font-weight: 700; font-size: 16px; margin-right: 16px; }
+  .page { padding: 32px; max-width: 1100px; margin: auto; }
+  h1 { font-size: 22px; margin-bottom: 24px; }
+  h2 { font-size: 18px; margin-top: 32px; }
+  .btn { display: inline-block; padding: 8px 18px; border-radius: 5px; font-size: 13px;
+         text-decoration: none; cursor: pointer; border: none; font-family: inherit; }
+  .btn-primary { background: #0067b8; color: white; }
+  .btn-primary:hover { background: #005a9e; }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+  table { width: 100%; border-collapse: collapse; background: white;
+          border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  th { background: #2d3436; color: white; padding: 10px 14px; text-align: left; font-size: 13px; }
+  td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #f0f0f0; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafa; }
+  .stats { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+  .stat { background: white; border-radius: 8px; padding: 18px 24px; flex: 1; min-width: 120px;
+          box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .stat .val { font-size: 28px; font-weight: 700; }
+  .stat .lbl { font-size: 12px; color: #636e72; margin-top: 2px; }
+  .risk-badge {
+    color: white;
+    padding: 6px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 16px;
+  }
+  .risk-low { background: green; }
+  .risk-medium { background: orange; }
+  .risk-high { background: red; }
+  .check-yes { background: #d5f4e6; color: #27ae60; font-weight: 600; }
+  .check-no { background: #fadbd8; color: #c0392b; }
+</style>
+</head>
+<body>
+<nav>
+  <span class="brand">🎣 PhishSim</span>
+  <a href="/admin/">Campaigns</a>
+  <a href="/admin/new">New Campaign</a>
+</nav>
+<div class="page">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+  <h1>{{.Report.CampaignName}}</h1>
+  <div style="display:flex;gap:8px;">
+    <form method="POST" action="/admin/campaign/{{.CampaignID}}/send" style="display:inline;">
+      <button type="submit" class="btn btn-primary">📧 Send Campaign</button>
+    </form>
+    <a href="/admin/campaign/{{.CampaignID}}/report" class="btn btn-primary">Download Report</a>
+  </div>
+</div>
+
+<!-- Risk badge -->
+<div style="margin-bottom:24px;">
+    <span class="risk-badge {{.Report.RiskColor}}">
+        Risk: {{.Report.RiskScore}}
+    </span>
+</div>
+
+<!-- Stat cards -->
+<div class="stats">
+  <div class="stat"><div class="val">{{.Report.TotalTargets}}</div><div class="lbl">Targets</div></div>
+  <div class="stat"><div class="val">{{.Report.EmailsSent}}</div><div class="lbl">Emails Sent</div></div>
+  <div class="stat"><div class="val">{{.Report.Opened}}</div><div class="lbl">Opened ({{formatRate .Report.OpenRate}})</div></div>
+  <div class="stat"><div class="val">{{.Report.Clicked}}</div><div class="lbl">Clicked ({{formatRate .Report.ClickRate}})</div></div>
+  <div class="stat"><div class="val">{{.Report.Submitted}}</div><div class="lbl">Submitted ({{formatRate .Report.SubmissionRate}})</div></div>
+</div>
+
+<!-- Target table -->
+<h2 style="margin-bottom:12px;">Target Breakdown</h2>
+<table style="margin-bottom:32px;">
+  <thead>
+    <tr>
+      <th>Name</th><th>Email</th><th>Sent</th><th>Opened</th><th>Clicked</th><th>Submitted</th><th>Risk</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{range .Report.Targets}}
+    <tr>
+      <td>{{.FirstName}} {{.LastName}}</td>
+      <td>{{.Email}}</td>
+      <td class="{{if .EmailSent}}check-yes{{else}}check-no{{end}}">{{checkmark .EmailSent}}</td>
+      <td class="{{if .Opened}}check-yes{{else}}check-no{{end}}">{{checkmark .Opened}}</td>
+      <td class="{{if .Clicked}}check-yes{{else}}check-no{{end}}">{{checkmark .Clicked}}</td>
+      <td class="{{if .Submitted}}check-yes{{else}}check-no{{end}}">{{checkmark .Submitted}}</td>
+      <td>{{riskBadge .RiskLevel}}</td>
+    </tr>
+    {{end}}
+  </tbody>
+</table>
+
+<!-- Timeline -->
+<h2 style="margin-bottom:12px;">Event Timeline</h2>
+{{range .Report.Timeline}}
+<div style="background:white;border-radius:6px;padding:10px 16px;margin-bottom:8px;
+            box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;gap:16px;
+            align-items:center;font-size:13px;">
+  <div style="color:#636e72;min-width:160px;">{{formatTime .Timestamp}}</div>
+  <div style="font-weight:600;min-width:200px;">{{eventLabel .EventType}}</div>
+  <div>{{.FirstName}} {{.LastName}} &lt;{{.Email}}&gt;</div>
+  <div style="color:#b2bec3;font-size:11px;margin-left:auto;">{{.IP}}</div>
+</div>
+{{end}}
+</div>
+</body>
+</html>
+{{end}}

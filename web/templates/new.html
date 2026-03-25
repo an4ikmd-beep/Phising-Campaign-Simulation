@@ -1,0 +1,78 @@
+{{define "new"}}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>PhishSim — New Campaign</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Segoe UI, sans-serif; background: #f5f6fa; color: #2d3436; }
+  nav { background: #2d3436; padding: 0 32px; display: flex; align-items: center; gap: 24px; height: 52px; }
+  nav a { color: #dfe6e9; text-decoration: none; font-size: 14px; }
+  nav a:hover { color: white; }
+  nav .brand { color: white; font-weight: 700; font-size: 16px; margin-right: 16px; }
+  .page { padding: 32px; max-width: 1100px; margin: auto; }
+  h1 { font-size: 22px; margin-bottom: 24px; }
+  .btn { display: inline-block; padding: 8px 18px; border-radius: 5px; font-size: 13px;
+         text-decoration: none; cursor: pointer; border: none; font-family: inherit; }
+  .btn-primary { background: #0067b8; color: white; }
+  .btn-primary:hover { background: #005a9e; }
+  .btn-danger  { background: #c0392b; color: white; }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+  .card { background: white; border-radius: 8px; padding: 20px 28px;
+          box-shadow: 0 1px 4px rgba(0,0,0,.08); margin-bottom: 24px; }
+  input, textarea, select { width: 100%; padding: 8px 10px; border: 1px solid #ddd;
+         border-radius: 4px; font-size: 14px; font-family: inherit; margin-top: 4px; }
+  label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 12px; }
+  .form-row { margin-bottom: 16px; }
+  .alert { padding: 10px 16px; border-radius: 5px; margin-bottom: 20px; font-size: 13px; }
+  .alert-error { background: #ffeaa7; border-left: 4px solid #fdcb6e; }
+</style>
+</head>
+<body>
+<nav>
+  <span class="brand">🎣 PhishSim</span>
+  <a href="/admin/">Campaigns</a>
+  <a href="/admin/new">New Campaign</a>
+</nav>
+<div class="page">
+<h1>New Campaign</h1>
+
+{{if .Error}}
+<div class="alert alert-error">{{.Error}}</div>
+{{end}}
+
+<div class="card" style="max-width:560px;">
+  <form method="POST" action="/admin/new">
+    <div class="form-row">
+      <label>Campaign Name
+        <input name="name" placeholder="e.g. Q1 Phishing Test" required />
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Email Subject
+        <input name="subject" placeholder="e.g. Action Required: Verify your account" required />
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Sender Name
+        <input name="sender_name" placeholder="e.g. IT Security Team" required />
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Sender Email
+        <input name="sender_email" type="email" placeholder="e.g. security@company.com" required />
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Targets (one per line: email,firstname,lastname)
+        <textarea name="targets" rows="5" placeholder="alice@company.com,Alice,Smith&#10;bob@company.com,Bob,Jones" required></textarea>
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Campaign</button>
+  </form>
+</div>
+</div>
+</body>
+</html>
+{{end}}
